@@ -2,7 +2,8 @@ import 'package:chat_app_firebase/src/data/model/login_user.dart';
 import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
-  LogInUser _logInUser = LogInUser(userName: '', imageUrl: '', email: '');
+  LogInUser _logInUser =
+      LogInUser(userName: '', imageUrl: '', email: '', isUserLogin: false);
 
   bool _isUserLogIn = false;
 

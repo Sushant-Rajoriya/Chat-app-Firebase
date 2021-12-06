@@ -1,26 +1,64 @@
+import 'package:chat_app_firebase/src/data/fireStore_methods/fire_store_data_methods.dart';
+import 'package:chat_app_firebase/src/data/model/login_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseProvider extends ChangeNotifier {
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
+  LogInUser _logInUser =
+      LogInUser(userName: '', imageUrl: '', email: '', isUserLogin: false);
+
+  bool _isUserLogIn = false;
+
+  LogInUser get logInUser => _logInUser;
+
+  bool get isUserLogIn => _isUserLogIn;
+
+  Future signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth =
         await googleUser?.authentication;
 
-    // Create a new credential
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
 
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    FireStoreDataMethods fireStoreDataMethods = FireStoreDataMethods();
+    await addUserData(
+        googleUser!.displayName, googleUser.photoUrl, googleUser.email);
   }
+
+  Future addUserData(String? name, String? image, String? emailAd) async {
+    _logInUser.userName = name ?? '';
+    _logInUser.imageUrl = image ?? '';
+    _logInUser.email = emailAd ?? '';
+
+    FireStoreDataMethods fireStoreDataMethods = FireStoreDataMethods();
+    Map<String, String> userInfoMap = {
+      "name": name ?? "",
+      "email": emailAd ?? "",
+      "imageUrl": image ?? ""
+    };
+    fireStoreDataMethods.uploadUserInfor(userInfoMap);
+    _isUserLogIn = true;
+
+    notifyListeners();
+  }
+
+  Future removeUserData() async {
+    _logInUser.userName = '';
+    _logInUser.imageUrl = '';
+    _logInUser.email = '';
+
+    _isUserLogIn = false;
+
+    notifyListeners();
+  }
+
 /*
   Future facebookLogin() async {
     try {

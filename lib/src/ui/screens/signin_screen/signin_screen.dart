@@ -1,25 +1,31 @@
 import 'package:chat_app_firebase/src/assets/app_colors.dart';
 import 'package:chat_app_firebase/src/assets/app_font.dart';
 import 'package:chat_app_firebase/src/assets/app_routes.dart';
+import 'package:chat_app_firebase/src/logic/cubit/firebase_sign_in/firebase_sign_in_cubit.dart';
 import 'package:chat_app_firebase/src/logic/provider/firebase_provider.dart';
 import 'package:chat_app_firebase/src/logic/provider/user_provider.dart';
 import 'package:chat_app_firebase/src/ui/coman_widgets/box_look.dart';
 import 'package:chat_app_firebase/src/ui/coman_widgets/my_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-class SigninScreen extends StatelessWidget {
+class SigninScreen extends StatefulWidget {
   const SigninScreen({Key? key}) : super(key: key);
 
+  @override
+  State<SigninScreen> createState() => _SigninScreenState();
+}
+
+class _SigninScreenState extends State<SigninScreen> {
   @override
   Widget build(BuildContext context) {
     late TextEditingController _usernameController = TextEditingController();
 
     late TextEditingController _passwordController = TextEditingController();
 
-    FirebaseProvider _firebaseProvider = Provider.of<FirebaseProvider>(context);
-
-    UserProvider _userProvider = Provider.of<UserProvider>(context);
+    FirebaseSignInCubit _firebaseSignInCubit =
+        BlocProvider.of<FirebaseSignInCubit>(context, listen: false);
 
     return Scaffold(
       backgroundColor: primaryColor,
@@ -30,6 +36,15 @@ class SigninScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              MultiBlocListener(listeners: [
+                BlocListener<FirebaseSignInCubit, FirebaseSignInState>(
+                  listener: (context, state) {
+                    if (state.isUserLogin) {
+                      Navigator.of(context).pushNamed(AppRoute.homeScreen);
+                    }
+                  },
+                ),
+              ], child: SizedBox.shrink()),
               const SizedBox(
                 height: 20,
               ),
@@ -105,7 +120,8 @@ class SigninScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      print(_firebaseProvider.signInWithGoogle());
+                      // _firebaseProvider.signInWithGoogle();
+                      _firebaseSignInCubit.signInWith('Google');
                     },
                     child: CircleAvatar(
                       radius: 30,
@@ -115,7 +131,7 @@ class SigninScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      _firebaseProvider.signInWithGoogle();
+                      //_firebaseProvider.signInWithGoogle();
                     },
                     child: CircleAvatar(
                       backgroundColor: Colors.white,
