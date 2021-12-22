@@ -1,23 +1,32 @@
+import 'package:chat_app_firebase/src/data/model/login_user.dart';
 import 'package:chat_app_firebase/src/ui/coman_widgets/my_text_field.dart';
 import 'package:chat_app_firebase/src/ui/screens/chat_screen/my_widgets/chat_top_bar.dart';
 import 'package:chat_app_firebase/src/ui/screens/chat_screen/my_widgets/chat_widget.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  final ChatModel chatModel;
+  const ChatScreen({
+    Key? key,
+    required this.chatModel,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     TextEditingController _chatController = TextEditingController();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Padding(
-            padding: EdgeInsets.all(18.0),
-            child: ChatTopBar(tittle: "Rashmika"),
+          Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: ChatTopBar(
+              tittle: chatModel.userName,
+              url: chatModel.imageUrl,
+            ),
           ),
           Expanded(
             child: Container(

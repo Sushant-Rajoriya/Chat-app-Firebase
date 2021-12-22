@@ -11,7 +11,7 @@ class BoxLook extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.0),
         child: Container(
-          margin: const EdgeInsets.all(8.0), //Same as `blurRadius` i guess
+          margin: const EdgeInsets.all(20.0), //Same as `blurRadius` i guess
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.0),
             color: Colors.white,

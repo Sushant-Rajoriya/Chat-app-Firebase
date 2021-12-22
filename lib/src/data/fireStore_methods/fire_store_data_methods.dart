@@ -1,24 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FireStoreDataMethods {
-  getUsersByUsername(String username) async {
-    return await FirebaseFirestore.instance
-        .collection('users')
-        .where("name", isEqualTo: username)
-        .get();
+  getAllUsers() async {
+    return await FirebaseFirestore.instance.collection('users').get();
   }
 
-  getUsersByUserEmail(String userEmail) async {
-    return await FirebaseFirestore.instance
+  uploadUserInfor(userMap, email) async {
+    final snapShot = await FirebaseFirestore.instance
         .collection('users')
-        .where("email", isEqualTo: userEmail)
+        .doc(email) // varuId in your case
         .get();
-  }
 
-  uploadUserInfor(userMap) {
-    FirebaseFirestore.instance.collection('users').add(userMap).catchError((e) {
-      print(e.toString());
-    });
+    if (snapShot == null || !snapShot.exists) {
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(email)
+          .set(userMap)
+          .catchError((e) {
+        print(e.toString());
+      });
+    }
   }
 
   createChatRoom(String chatRoomId, chatRoomMap) {

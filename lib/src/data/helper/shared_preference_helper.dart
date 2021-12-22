@@ -35,21 +35,21 @@ class SharedPreferenceHelper {
 
   static Future<bool> getUserLoggedInFromSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getBool(sharedPreferenceUserLoggedInKey) ?? false;
+    return preferences.getBool(sharedPreferenceUserLoggedInKey) ?? false;
   }
 
   static Future<String> getUserNameFromSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getString(sharedPreferenceUserNameKey) ?? '';
+    return preferences.getString(sharedPreferenceUserNameKey) ?? '';
   }
 
   static Future<String> getUserEmailFromSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getString(sharedPreferenceUserEmailKey) ?? '';
+    return preferences.getString(sharedPreferenceUserEmailKey) ?? '';
   }
 
   static Future<String> getUserImageUrlFromSharedPreference() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
-    return await preferences.getString(sharedPreferenceUserImageUrlKey) ?? '';
+    return preferences.getString(sharedPreferenceUserImageUrlKey) ?? '';
   }
 }

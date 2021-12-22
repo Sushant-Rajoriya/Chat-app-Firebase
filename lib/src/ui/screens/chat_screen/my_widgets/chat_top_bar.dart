@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 class ChatTopBar extends StatelessWidget {
   final String tittle;
-  const ChatTopBar({Key? key, required this.tittle}) : super(key: key);
+  final String url;
+  const ChatTopBar({Key? key, required this.tittle, required this.url})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,10 +29,9 @@ class ChatTopBar extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(AppRoute.aboutScreen);
           },
-          child: const CircleAvatar(
-            backgroundImage: NetworkImage(
-                "https://i2.wp.com/www.socialnews.xyz/wp-content/uploads/2020/02/22/Actress-Rashmika-Mandanna-Goofy-New-HD-Stills-14.jpg?resize=1708%2C2560&quality=90&zoom=1&ssl=1"),
-            radius: 25,
+          child: CircleAvatar(
+            radius: 30,
+            child: Image.network(url),
           ),
         ),
         const SizedBox(

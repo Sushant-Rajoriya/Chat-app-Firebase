@@ -1,9 +1,27 @@
+import 'package:chat_app_firebase/src/data/helper/shared_preference_helper.dart';
+import 'package:chat_app_firebase/src/data/model/login_user.dart';
 import 'package:chat_app_firebase/src/ui/screens/about_screen/my_widgets/about_top_bar.dart';
 import 'package:chat_app_firebase/src/ui/screens/about_screen/my_widgets/section.dart';
 import 'package:flutter/material.dart';
 
-class AboutScreen extends StatelessWidget {
+class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
+
+  @override
+  State<AboutScreen> createState() => _AboutScreenState();
+}
+
+class _AboutScreenState extends State<AboutScreen> {
+  static UserModel userModel = UserModel(
+      userName: "Loading..",
+      imageUrl:
+          "https://www.clipartkey.com/mpngs/m/197-1979528_chat-room-apps-logo.png",
+      email: "Loading..");
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +32,7 @@ class AboutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const AboutTopBar(tittle: "Rashmika"),
+            AboutTopBar(tittle: userModel.userName),
             const SizedBox(
               height: 20,
             ),
@@ -27,31 +45,38 @@ class AboutScreen extends StatelessWidget {
                       blurRadius: 8, color: Colors.black12, spreadRadius: 8)
                 ],
               ),
-              child: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://i2.wp.com/www.socialnews.xyz/wp-content/uploads/2020/02/22/Actress-Rashmika-Mandanna-Goofy-New-HD-Stills-14.jpg?resize=1708%2C2560&quality=90&zoom=1&ssl=1"),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(userModel.imageUrl),
                 radius: 150,
               ),
             ),
-            const Section(
+            Section(
               tittle: "Name :- ",
-              data: "Rashmika Mandana",
+              data: userModel.userName,
             ),
-            const Section(
+            Section(
               tittle: "Email :- ",
-              data: "RashmikaMandana@gmail.com",
+              data: userModel.email,
             ),
             const Section(
               tittle: "Phone :- ",
               data: "+91 835-796-7979",
             ),
-            const Section(
-              tittle: "Age   :- ",
-              data: "25",
-            ),
           ],
         ),
       ),
     );
+  }
+
+  getUserInfo() async {
+    String email =
+        await SharedPreferenceHelper.getUserEmailFromSharedPreference();
+    String name =
+        await SharedPreferenceHelper.getUserNameFromSharedPreference();
+    String image =
+        await SharedPreferenceHelper.getUserImageUrlFromSharedPreference();
+    userModel.email = email;
+    userModel.userName = name;
+    userModel.imageUrl = image;
   }
 }

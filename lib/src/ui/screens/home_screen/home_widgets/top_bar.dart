@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 
 class TopBar extends StatelessWidget {
   final String tittle;
-  const TopBar({Key? key, required this.tittle}) : super(key: key);
+  final Function() logout;
+  const TopBar({Key? key, required this.tittle, required this.logout})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -24,9 +26,12 @@ class TopBar extends StatelessWidget {
           tittle,
           style: tittleTxt.copyWith(color: Colors.black, fontSize: 30),
         ),
-        const Icon(
-          Icons.search_outlined,
-          size: 25,
+        GestureDetector(
+          onTap: logout(),
+          child: const Icon(
+            Icons.logout,
+            size: 25,
+          ),
         ),
       ],
     );

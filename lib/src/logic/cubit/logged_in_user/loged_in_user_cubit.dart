@@ -2,11 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:chat_app_firebase/src/data/helper/shared_preference_helper.dart';
 import 'package:chat_app_firebase/src/data/model/login_user.dart';
 
-part 'looged_in_user_state.dart';
+part 'loged_in_user_state.dart';
 
-class LoogedInUserCubit extends Cubit<LoogedInUserState> {
-  LoogedInUserCubit()
-      : super(LoogedInUserState(
+class LogedInUserCubit extends Cubit<LogedInUserState> {
+  LogedInUserCubit()
+      : super(LogedInUserState(
             logInUser: LogInUser(
           email: '',
           imageUrl: '',
@@ -25,7 +25,7 @@ class LoogedInUserCubit extends Cubit<LoogedInUserState> {
           await SharedPreferenceHelper.getUserNameFromSharedPreference();
       String image =
           await SharedPreferenceHelper.getUserImageUrlFromSharedPreference();
-      emit(LoogedInUserState(
+      emit(LogedInUserState(
           logInUser: LogInUser(
         email: email,
         imageUrl: image,

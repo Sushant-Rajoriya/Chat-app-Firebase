@@ -28,6 +28,15 @@ class FirebaseSignInCubit extends Cubit<FirebaseSignInState> {
 
         break;
 
+      case 'Phone':
+        //Todo 1 :- Add Number of User to name
+        storeUserInfo(
+            "",
+            "https://cdn2.iconfinder.com/data/icons/business-roundline/512/mobile_phone-512.png",
+            _mobileNumber);
+
+        break;
+
       default:
         {
           throw ('Can not Login');
@@ -42,12 +51,8 @@ class FirebaseSignInCubit extends Cubit<FirebaseSignInState> {
       "email": emailAd ?? "",
       "imageUrl": image ?? ""
     };
-    var abs = fireStoreDataMethods.getUsersByUserEmail(emailAd ?? '');
-    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-    print(abs);
-    print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
-    fireStoreDataMethods.uploadUserInfor(userInfoMap);
+    fireStoreDataMethods.uploadUserInfor(userInfoMap, emailAd);
 
     SharedPreferenceHelper.saveUserLoggedInToSharedPreference(true);
     SharedPreferenceHelper.saveUserNameToSharedPreference(name ?? "");
@@ -55,5 +60,46 @@ class FirebaseSignInCubit extends Cubit<FirebaseSignInState> {
     SharedPreferenceHelper.saveUserImageUrlToSharedPreference(image ?? "");
 
     emit(FirebaseSignInState(isUserLogin: true));
+  }
+
+  String _verificationID = '';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String _mobileNumber = '';
+  Future otpLogin(String number) async {
+    _mobileNumber = number;
+    await _auth.verifyPhoneNumber(
+        phoneNumber: "+91 $number",
+        verificationCompleted: (phoneAuthCredential) async {},
+        verificationFailed: (verificationFailed) async {
+          print(verificationFailed.message);
+        },
+        codeSent: (verificationId, resendingToken) async {
+          _verificationID = verificationId;
+        },
+        codeAutoRetrievalTimeout: (verificationId) async {});
+  }
+
+  Future verifyOTP(String smsCode) async {
+    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+        verificationId: _verificationID, smsCode: smsCode);
+    try {
+      final authCredential =
+          await _auth.signInWithCredential(phoneAuthCredential);
+      if (authCredential.user != null) {
+        signInWith("Phone");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  logout() async {
+    await FirebaseAuth.instance.signOut();
+    await _auth.signOut();
+     SharedPreferenceHelper.saveUserLoggedInToSharedPreference(false);
+    SharedPreferenceHelper.saveUserNameToSharedPreference("");
+    SharedPreferenceHelper.saveUserEmailToSharedPreference("");
+    SharedPreferenceHelper.saveUserImageUrlToSharedPreference("");
   }
 }
